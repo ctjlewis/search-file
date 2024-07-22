@@ -1,5 +1,6 @@
 export async function searchFile(path: string, phrase: string): Promise<boolean> {
   const file = Bun.file(path)
+  const decoder = new TextDecoder()
   const reader = file.stream().getReader()
   const chunkSize = phrase.length
   
@@ -16,7 +17,7 @@ export async function searchFile(path: string, phrase: string): Promise<boolean>
     combinedChunk.set(previousChunk)
     combinedChunk.set(currentChunk, previousChunk.length)
 
-    const decodedChunk = new TextDecoder().decode(combinedChunk)
+    const decodedChunk = decoder.decode(combinedChunk)
     if (decodedChunk.includes(phrase)) {
       found = true
       break
